@@ -1,63 +1,43 @@
-name: Get Subscription Daily
+name: Generate and Commit File
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch:
   schedule:
-    - cron: '0 8 * * 6' 
-  
-
-permissions:
-  contents: write
+    - cron: '0 0 * * 0'   # 每周日0点跑一次
+  workflow_dispatch: # 允许手动触发
 
 jobs:
-  execute-script:
+  build-and-commit:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-    - name: Set up Python 3.10
+    - name: Set up Python
       uses: actions/setup-python@v3
       with:
-        python-version: "3.10"
+        python-version: '3.10'
 
     - name: Install dependencies
       run: |
-        pip3 install pyYAML requests
+        pip3 install pyYAML requests tqdm
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-    - name: Fetch previous subscribes.txt from Gist
-      env:
-        GH_TOKEN: ${{ secrets.PRIVATE_TOKEN_AGGREGATOR }}
+    - name: Collect proxies
       run: |
         cd aggregate
-        gh gist view ${{ secrets.GIST_ID }} --files subscribes.txt > old-subscribes.txt || true
+        python -u subscribe/collect.py -s  
 
-    - name: Collect Subscribe
-      id: collect
+    - name: Configure Git
       run: |
-        cd aggregate
-        python -u subscribe/collect.py
-        if [ -s old-subscribes.txt ]; then
-          cat old-subscribes.txt subscribes.txt | sort | uniq > merged-subscribes.txt
-          mv merged-subscribes.txt subscribes.txt
-          sed 's/https:/\n&/2g' subscribes.txt  > temp.txt && mv temp.txt subscribes.txt
-        fi
-        
-    - name: Check and remove invalid links
-      run: |
-        cd aggregate
-        python -u subscribe/check_links.py
+        git config user.name "GitHub Actions Bot"
+        git config user.email "actions@github.com"
 
-    - name: Create/Update Gist
-      env:
-        GH_TOKEN: ${{ secrets.PRIVATE_TOKEN_AGGREGATOR }}
+    - name: Commit and push changes
       run: |
-        cd aggregate
-        gh gist edit ${{ secrets.GIST_ID }} --add "proxies.yaml"
-        gh gist edit ${{ secrets.GIST_ID }} --add "subscribes.txt"
-        gh gist edit ${{ secrets.GIST_ID }} --add "domains.txt"
-        gh gist edit ${{ secrets.GIST_ID }} --add "valid-domains.txt"
+        git add aggregate/data/proxies.yaml
+        git commit -m "Add generated output.yaml"
+        git push
