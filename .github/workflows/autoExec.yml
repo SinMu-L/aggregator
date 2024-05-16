@@ -31,7 +31,7 @@ jobs:
         
         python -u subscribe/collect.py -s  
         # echo "123" > aggregate/test.txt
-        ls -al aggregate 
+        
 
     - name: Configure Git
       run: |
@@ -40,7 +40,8 @@ jobs:
 
     - name: Commit and push changes
       run: |
-        # git add aggregate/test.txt
-        git add aggregate/data
+        ls -al
+        ls -al aggregate 
+        git add .
         git commit -m "Add generated output.yaml"
         git push
