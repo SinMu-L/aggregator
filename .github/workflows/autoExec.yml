@@ -41,6 +41,6 @@ jobs:
     - name: Commit and push changes
       run: |
         # git add aggregate/test.txt
-        git add aggregate/proxies.yaml
+        git add aggregate/data
         git commit -m "Add generated output.yaml"
         git push
