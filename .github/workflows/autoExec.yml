@@ -30,6 +30,7 @@ jobs:
       run: |
         cd aggregate
         pwd
+        cd ../..
         python -u subscribe/collect.py -s  
 
     - name: Configure Git
