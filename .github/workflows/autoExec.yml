@@ -29,6 +29,7 @@ jobs:
     - name: Collect proxies
       run: |
         cd aggregate
+        pwd
         python -u subscribe/collect.py -s  
 
     - name: Configure Git
