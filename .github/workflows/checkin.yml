@@ -1,8 +1,6 @@
 name: checkin
 on:
-  push:
-    branches:
-      - main
+
   workflow_dispatch:
   schedule:
     - cron: "45 02 * * *"
