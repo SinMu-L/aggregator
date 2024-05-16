@@ -31,6 +31,7 @@ jobs:
         
         python -u subscribe/collect.py -s  
         # echo "123" > aggregate/test.txt
+        ls -al aggregate 
 
     - name: Configure Git
       run: |
