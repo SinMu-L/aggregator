@@ -2,7 +2,7 @@ name: Get Subscription Daily
 
 on:
   schedule:
-    - cron: '0 16 * * 6' 
+    - cron: '0 8 * * 6' 
   workflow_dispatch: 
 
 permissions:
