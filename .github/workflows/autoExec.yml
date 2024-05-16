@@ -1,9 +1,13 @@
 name: Get Subscription Daily
 
 on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
   schedule:
     - cron: '0 8 * * 6' 
-  workflow_dispatch: 
+  
 
 permissions:
   contents: write
