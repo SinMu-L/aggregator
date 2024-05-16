@@ -28,12 +28,9 @@ jobs:
 
     - name: Collect proxies
       run: |
-        ls
-        cd aggregate
-        pwd
-        cd ..
-        # python -u subscribe/collect.py -s  
-        echo "123" > aggregate/test.txt
+        
+        python -u subscribe/collect.py -s  
+        # echo "123" > aggregate/test.txt
 
     - name: Configure Git
       run: |
@@ -42,7 +39,7 @@ jobs:
 
     - name: Commit and push changes
       run: |
-        git add aggregate/test.txt
-        # git add aggregate/proxies.yaml
+        # git add aggregate/test.txt
+        git add aggregate/proxies.yaml
         git commit -m "Add generated output.yaml"
         git push
